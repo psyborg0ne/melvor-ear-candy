@@ -1,0 +1,6 @@
+{
+    "namespace": "psyEarCandy",
+    "setup": "setup.mjs",
+    "icon": "assets/icon.png",
+    "load": ["src/css/styles.css"]
+  }
