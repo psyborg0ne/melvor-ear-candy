@@ -1,0 +1,53 @@
+/* Grid layout for skill cards */
+.skill-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Reduce column width */
+  gap: 0.5rem; /* Add a smaller gap between columns */
+}
+
+/* Individual skill card styling */
+.skill-card-wrapper {
+  border: 1px solid #ccc;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 220px; /* Slightly smaller width for cards */
+  text-align: center;
+}
+
+/* Title and icon styling */
+.skill-card-title-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.skill-card-icon {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 5px;
+}
+
+.skill-card-title {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/* Volume and delay input styling */
+.skill-card-volume-wrapper,
+.skill-card-delay-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+/* Checkbox styling */
+.skill-card-checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 10px;
+}
