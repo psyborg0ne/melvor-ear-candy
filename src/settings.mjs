@@ -1,3 +1,4 @@
+// [PSY] Ear Candy | /src/settings.mjs
 const { settings, loadModule, characterStorage, patch, getResourceUrl } = mod.getContext(import.meta);
 const { initCustomSettingTypes } = await loadModule('src/SettingTypes.mjs');
 
@@ -70,6 +71,7 @@ function initSkillSettings(){
 function buildSkillConfigs() {
   let skillConfigs = new Map();
 
+  // TODO: Define global skill list once
   game.skills.forEach(skill => {
     let skillname = getLangString(`SKILL_NAME_${skill.localID}`);
     let icon = assets.getURI(`assets/media/skills/${skillname}/${skillname}.png`);

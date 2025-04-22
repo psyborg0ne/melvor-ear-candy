@@ -1,3 +1,4 @@
+// [PSY] Ear Candy | /src/audiomng.mjs
 class AudioManager {
     constructor() {
         if (AudioManager.instance == null) {
