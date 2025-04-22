@@ -1,10 +1,11 @@
 export async function setup({loadModule, patch, getResourceUrl, onCharacterLoaded, onInterfaceReady}){
-    const audioMod = await loadModule('src/audiomng.mjs');
-    const audioMng = audioMod.default;
-    const opt = await loadModule('src/settings.mjs');
+    const audioModule = await loadModule('src/audiomng.mjs');
+    const modSettings = await loadModule('src/settings.mjs');
+
+    const audioMng = audioModule.default;
 
     onCharacterLoaded(() => {
-        opt.initSettings();
+        modSettings.initSettings();
         // audioMng.play('test url')
     })
 
