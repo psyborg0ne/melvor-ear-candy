@@ -1,7 +1,7 @@
 // [PSY] Ear Candy | /src/SkillConnectorHelper.mjs
 const { loadModule } = mod.getContext(import.meta);
 
-export async function loadSkillConnectors()
+export async function loadSkillConnectors(audioMng)
 {
     const connectorModules = new Map();
     const loadPromises = [];
@@ -15,6 +15,10 @@ export async function loadSkillConnectors()
               const mod = await loadModule(`src/skills/${skillname}Connector.mjs`);
               if (mod?.default) {
                 const connector = new mod.default();
+                connector.audioMng = audioMng;
+                console.log(`[PSY] Ear Candy: Loaded ${skillname} audioMng ${audioMng}`);
+                connector.skillName = skillname;
+                connector.skillInstance = skill;
                 connectorModules.set(skillname, connector);
                 connector.initializeConnector();
               }

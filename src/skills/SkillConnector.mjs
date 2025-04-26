@@ -1,8 +1,55 @@
+const { getResourceUrl, patch } = mod.getContext(import.meta);
+
 export class SkillConnector {
     constructor() {
       if (this.constructor == SkillConnector) {
         throw new Error(`[PSY] ${this.constructor.name} class is abstract and cannot be initialized directly.`);
       }
+
+    this.audioMng = null; // Initialize with a default value
+    this.skillname = null; // Initialize with a default value
+    this.skill = null; // Initialize with a default value
+    this.patchAddXP = null;
+    }
+
+    // Getter for audio manager
+    get audioManager() {
+        return this.audioMng;
+    }
+
+    // Setter for audio manager
+    set audioManager(manager) {
+        this.audioMng = manager;
+    }
+
+    // Getter for skillname
+    get skillName() {
+        return this.skillname;
+    }
+
+    // Setter for skillname
+    set skillName(name) {
+        this.skillname = name;
+    }
+
+    // Getter for skill
+    get skillInstance() {
+        return this.skill;
+    }
+
+    // Setter for skill
+    set skillInstance(skill) {
+        this.skill = skill;
+    }
+
+    // Getter for patchAddXP
+    get patchAddXPInstance() {
+        return this.patchAddXP;
+    }
+
+    // Setter for patchAddXP
+    set patchAddXPInstance(patch) {
+        this.patchAddXP = patch;
     }
 
     initializeConnector() {
@@ -56,6 +103,10 @@ export class SkillConnector {
 
     patchXpDrop() {
         // TODO Patch XP drop
+        let sAddXP = getResourceUrl(`assets/sfx/${this.skillName}/addXP.wav`);
+        this.patchAddXPInstance = patch(this.skillInstance.constructor, 'addXP');
+        // this.patchAddXPInstance.after(this.afterXpDropPatch());
+        this.patchAddXPInstance.after(() => { this.audioManager.playActionSound(this.skillName, getResourceUrl(`assets/sfx/${this.skillName}/addXP.wav`))});
         console.log(`[${this.constructor.name}] Patching XP drop...`);
     }
 
@@ -74,8 +125,23 @@ export class SkillConnector {
         console.log(`[${this.constructor.name}] Patching abyssal level up...`);
     }
 
+    // if skill is locked
+    patchOnUnlockSkill()
+    {
+        // TODO Patch on unlock skill
+        console.log(`[${this.constructor.name}] Patching on unlock skill...`);
+    }
+
+    // If character mode is ancient relic
+    patchAncientRelicUnlock()
+    {
+        // TODO Patch ancient relic unlock
+        console.log(`[${this.constructor.name}] Patching ancient relic unlock...`);
+    }
+
     helloWorld() {
         console.log(`[${this.constructor.name}] Hello world!`);
+        // this.audioMng.play(getResourceUrl('assets/sfx/Woodcutting/addXP.wav'));
     }
 
   }
