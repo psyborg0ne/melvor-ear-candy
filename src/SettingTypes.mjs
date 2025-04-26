@@ -1,3 +1,4 @@
+// [PSY] Ear Candy | /src/SettingTypes.mjs
 const { settings } = mod.getContext(import.meta);
 
 export function initCustomSettingTypes(){

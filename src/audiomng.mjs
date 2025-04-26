@@ -1,8 +1,9 @@
+// [PSY] Ear Candy | /src/audiomng.mjs
 class AudioManager {
     constructor() {
         if (AudioManager.instance == null) {
             this.mVol = 3; // Master volume
-            this.hasDelay = true; // Enable sound delay
+            this.hasDelay = false; // Enable sound delay
             this.sDelay = 1; // Sound delay in seconds
             this.activeSkill = '' // Active skill playing music
 
@@ -37,6 +38,15 @@ class AudioManager {
             this.lastSoundTime = time;
             console.log('Last sound time set to:', this.lastSoundTime);
         }
+    }
+
+    playActionSound(skillname, url) {
+        this.play(url);
+        this.activeSkill = skillname;
+    }
+
+    playMusic(url){
+        this.play(url);
     }
 
     play(url){

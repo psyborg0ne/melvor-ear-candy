@@ -1,12 +1,23 @@
-export async function setup({loadModule, patch, getResourceUrl, onCharacterLoaded, onInterfaceReady}){
-    const audioModule = await loadModule('src/audiomng.mjs');
-    const modSettings = await loadModule('src/settings.mjs');
+// [PSY] Ear Candy | setup.mjs
+export async function setup({loadModule, patch, getResourceUrl, onCharacterLoaded, onInterfaceReady, onModsLoaded}) {
+    const audioMod  = await loadModule('src/audiomng.mjs');
+    const audioMng  = audioMod.default;
+    const opt       = await loadModule('src/settings.mjs');
+    const skillConn = await loadModule('src/SkillConnectorHelper.mjs');
 
-    const audioMng = audioModule.default;
+    let connMap;
 
-    onCharacterLoaded(() => {
-        modSettings.initSettings();
-        // audioMng.play('test url')
+    onModsLoaded(async () => {
+      opt.initSettings();
     })
 
-}
+    onCharacterLoaded(async () => {
+      console.log(`[PSY] Passing audioMng ${audioMng} to skill connectors...`);
+      connMap = new Map(await skillConn.loadSkillConnectors(audioMng));
+    });
+
+    onInterfaceReady(async () => {
+      console.log('[PSY] Ear Candy: Loaded connectors:', connMap);
+      connMap.get('Mining').helloWorld();
+    });
+  }
