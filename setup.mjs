@@ -4,6 +4,8 @@ export async function setup({loadModule, patch, getResourceUrl, onCharacterLoade
     const audioMng  = audioMod.default;
     const opt       = await loadModule('src/settings.mjs');
     const skillConn = await loadModule('src/SkillConnectorHelper.mjs');
+    const petMngMod = await loadModule('src/PetManagerConnector.mjs');
+    const petMngConn = new petMngMod.default(audioMng);
 
     let connMap;
 
@@ -14,6 +16,9 @@ export async function setup({loadModule, patch, getResourceUrl, onCharacterLoade
     onCharacterLoaded(async () => {
       console.log(`[PSY] Passing audioMng ${audioMng} to skill connectors...`);
       connMap = new Map(await skillConn.loadSkillConnectors(audioMng));
+
+      petMngConn.initializeConnector();
+
     });
 
     onInterfaceReady(async () => {
