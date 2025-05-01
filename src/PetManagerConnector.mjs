@@ -1,4 +1,4 @@
-const { getResourceUrl, patch } = mod.getContext(import.meta);
+const { getResourceUrl, patch, loadModule } = mod.getContext(import.meta);
 
 export class PetManagerConnector {
     constructor(audioMng) {
@@ -26,8 +26,11 @@ export class PetManagerConnector {
         console.log("[PSY] Ear Candy | Patching PetManager functions...");
 
         this.patchMapInstance.set('unlockPet', patch(PetManager, 'unlockPet'));
-        this.patchMapInstance.get('unlockPet').after(() => { this.audioManager.play(getResourceUrl(`assets/sfx/Misc/unlockPet.ogg`))});
+        this.patchMapInstance.get('unlockPet').after(() => { this.audioManager.playActionSound('PetManager', getResourceUrl(`assets/sfx/Misc/unlockPet.ogg`))});
     }
 }
 
-export default PetManagerConnector;
+const audioMng = (await loadModule('src/audiomng.mjs'))?.default;
+
+const PetManagerConnectorInstance = new PetManagerConnector(audioMng);
+export default PetManagerConnectorInstance;

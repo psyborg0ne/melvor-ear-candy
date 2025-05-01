@@ -34,39 +34,99 @@ export function initCustomSettingTypes(){
       // This setting type creates a grid of skill cards
       // Each card represents a skill and contains its settings
       // The grid is responsive and adjusts to the number of skills
-      settings.type('skill-card-grid', {
+      settings.type('skill-card-grid', (() => {
+        // Persistent in-memory state for all skills
+        const state = {};
+
+        return {
           render(name, onChange, config) {
-            const gridWrapper = document.createElement('div');
-            gridWrapper.classList.add('skill-card-grid');
+            // Initialize state on first render
+            config.skills.forEach((cfg, skillName) => {
+              if (!state[skillName]) {
+                state[skillName] = {
+                  volume:       cfg.volumeDefault,
+                  enabled:      cfg.enabledDefault,
+                  delayEnabled: cfg.delayEnabledDefault,
+                  delay:        cfg.delayDefault
+                };
+              }
+            });
 
-            const skills = game.skills;
-            skills.forEach((skill) => {
-              const skillname = getLangString(`SKILL_NAME_${skill.localID}`);
+            // Build grid
+            const grid = document.createElement('div');
+            grid.classList.add('skill-card-grid');
 
-              // const cardElem = skillCard(config['skills'][skillname], (change) => {
-                const cardElem = skillCard(config['skills'].get(skillname), (change) => {
-                console.log('Skill card changed:', skillname, change);
-              });
+            config.skills.forEach((cfg, skillName) => {
+              // Create a card whose onChange merges into our state and bubbles up
+              const card = skillCard(
+                Object.assign({}, cfg, { skillname: skillName }),
+                change => {
+                  Object.assign(state[skillName], change);
+                  onChange(JSON.parse(JSON.stringify(state)));
+                }
+              );
 
               const col = document.createElement('div');
               col.classList.add('skill-card-column');
-              col.appendChild(cardElem);
-              gridWrapper.appendChild(col);
+              col.appendChild(card);
+              grid.appendChild(col);
             });
 
-            return gridWrapper;
+            return grid;
           },
+
           get(root) {
-            return Array.from(root.querySelectorAll('.skill-card-wrapper'))
-              .map(card => settings.type('skill-card').get(card));
+            // Return the persisted state object
+            return state;
           },
-          set(root, values) {
-            const cards = root.querySelectorAll('.skill-card-wrapper');
-            values.forEach((val, i) => {
-              settings.type('skill-card').set(cards[i], val);
-            });
+
+          set(root, value) {
+            // Hydrate our state from previously saved settings
+            if (value && typeof value === 'object') {
+              Object.keys(value).forEach(skillName => {
+                state[skillName] = value[skillName];
+              });
+            }
           }
-        });
+        };
+      })());
+
+
+
+
+      // settings.type('skill-card-grid', {
+      //     render(name, onChange, config) {
+      //       const gridWrapper = document.createElement('div');
+      //       gridWrapper.classList.add('skill-card-grid');
+
+      //       const skills = game.skills;
+      //       skills.forEach((skill) => {
+      //         const skillname = getLangString(`SKILL_NAME_${skill.localID}`);
+
+      //         // const cardElem = skillCard(config['skills'][skillname], (change) => {
+      //           const cardElem = skillCard(config['skills'].get(skillname), (change) => {
+      //           console.log('Skill card changed:', skillname, change);
+      //         });
+
+      //         const col = document.createElement('div');
+      //         col.classList.add('skill-card-column');
+      //         col.appendChild(cardElem);
+      //         gridWrapper.appendChild(col);
+      //       });
+
+      //       return gridWrapper;
+      //     },
+      //     get(root) {
+      //       return Array.from(root.querySelectorAll('.skill-card-wrapper'))
+      //         .map(card => settings.type('skill-card').get(card));
+      //     },
+      //     set(root, values) {
+      //       const cards = root.querySelectorAll('.skill-card-wrapper');
+      //       values.forEach((val, i) => {
+      //         settings.type('skill-card').set(cards[i], val);
+      //       });
+      //     }
+      //   });
 }
 
 function skillCard(config, onChange = () => {}) {
